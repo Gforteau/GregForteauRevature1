@@ -1,143 +1,101 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
-namespace GuessingGameChallenge
+namespace _11_ArraysAndListsChallenge
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            bool startOver;
-            List<int> guessNums = new List<int>();
-            do
+
+        }//EoM
+
+        /// <summary>
+        /// This method takes an array of integers and returns a double, the average 
+        /// value of all the integers in the array
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static double AverageOfValues(int[] array)
+        {
+            double sum = 0;
+            double average;
+            for (int i = 0; i < array.Length; i++)
             {
-                int userTurns = 0;
-                string userGuesses = $"Your Guesses are: {guessNums} ";
-                Console.WriteLine("Welcome to my Guessing Game.");
-                int randomNum = GetRandomNumber();
-                Console.WriteLine("The computer has selected a guess. Now you have 10 tries to match that guess or you lose.");
-
-                do
-                {
-                    Console.WriteLine("Please enter your guess.");
-                    int guess = GetUsersGuess();
-                    int round = CompareNums(randomNum, guess);
-                    guessNums.Add(guess);
-                    if (round == -1)
-                    {
-                        Console.WriteLine("Your guess is too high, try again.");
-                        userTurns++;
-                        Console.WriteLine(userGuesses);
-                    }
-                    else if (round == 1)
-                    {
-                        Console.WriteLine("Your guess is too low, try again.");
-                        userTurns++;
-                        Console.WriteLine(userGuesses);
-                    }
-                    else if (round == 0)
-                    {
-                        Console.WriteLine("You Win! Great Job!");
-                        userTurns = -1;
-                        Console.WriteLine(userGuesses);
-                    }
-                } while (userTurns < 10 && userTurns != -1);
-
-
-                if (userTurns == 10)
-                {
-                    Console.WriteLine("Nice try. The computer got the best of you this time, though.");
-                }
-                else if (userTurns == -1)
-                {
-                    Console.WriteLine("Congrats on your Win!!!!");
-                }
-                foreach (int s in guessNums)
-                {
-                    Console.WriteLine(userGuesses);
-                }
-                startOver = PlayGameAgain();
-            } while (startOver == true);
-
-        }
-
-        /// <summary>
-        /// This method returns a randomly chosen number between 1 and 100, inclusive.
-        /// </summary>
-        /// <returns></returns>
-        public static int GetRandomNumber()
-        {
-            int min = 1;
-            int max = 100;
-            int randNum = 0;
-
-            Random rnd = new Random();
-            return randNum = rnd.Next(min, max);
-        }
-
-        /// <summary>
-        /// This method gets input from the user, 
-        /// verifies that the input is valid and 
-        /// returns an int.
-        /// </summary>
-        /// <returns></returns>
-        public static int GetUsersGuess()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// This method will has two int parameters.
-        /// It will:
-        /// 1) compare the first number to the second number
-        /// 2) return -1 if the first number is less than the second number
-        /// 3) return 0 if the numbers are equal
-        /// 4) return 1 if the first number is greater than the second number
-        /// </summary>
-        /// <param name="randomNum"></param>
-        /// <param name="guess"></param>
-        /// <returns></returns>
-        public static int CompareNums(int randomNum, int guess)
-        {
-            int result;
-            if (randomNum < guess)
-            {
-                result = -1;
+                sum += array[i];
             }
-            else if (randomNum == guess)
+            return average = sum / array.Length;
+        }
+
+        /// <summary>
+        /// This method increases each array element by 2 and 
+        /// returns an array with the altered values.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static int[] SunIsShining(int[] x)
+        {
+            for (int i = 0; i < x.Length; i++)
             {
-                result = 0;
+                x[i] += 2;
+            }
+            return x;
+        }
+
+        /// <summary>
+        /// This method takes an ArrayList containing types of double, int, and string 
+        /// and returns the average of the ints and doubles only, as a decimal.
+        /// It ignores the string values and rounds the result to 3 decimal places toward the nearest even number.
+        /// </summary>
+        /// <param name="myArrayList"></param>
+        /// <returns></returns>
+        public static decimal ArrayListAvg(ArrayList myArrayList)
+        {
+            decimal x = 0;
+            int count = 0; // needs a counter because if it returns a type of string, then you must have a new count that exlucdes the strings for the average
+            for (int i = 0; i < myArrayList.Count; i++)
+            {
+                if (myArrayList[i].GetType() != typeof(String)) // checks to see if the index position being evaluated if is not the type of string
+                {
+                    x += Convert.ToDecimal(myArrayList[i]); // converts the number that passes for if condition to a decimal
+                    count++;
+                }
+            }
+            return Math.Round(x / count, 3); // rounds to the 3rd decimal position
+        }// help
+
+        /// <summary>
+        /// This method returns the rank (starting with 1st place) of a new 
+        /// score entered into a list of randomly ordered scores.
+        /// </summary>
+        /// <param name="myArray1"></param>
+        public static int ListAscendingOrder(List<int> scores, int yourScore)
+        {
+            int rank = 0;
+            scores.Add(yourScore);
+            scores.Sort();
+            rank = scores.IndexOf(yourScore);
+            return ++rank;
+        }// help
+
+        /// <summary>
+        /// This method has with two parameters takes a List<string> and a string.
+        /// The method returns true if the string parameter is found in the List, otherwise false.
+        /// </summary>
+        /// <param name="myArray2"></param>
+        /// <param name="word"></param>
+        /// <returns></returns>
+        public static bool FindStringInList(List<string> myArray2, string word)
+        {
+            if (myArray2.Contains(word))
+            {
+                return true;
             }
             else
             {
-                result = 1;
+                return false;
             }
-            return result;
         }
-
-        /// <summary>
-        /// This method offers the user the chance to play again. 
-        /// It returns true if they want to play again and false if they do not.
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public static bool PlayGameAgain()
-        {
-            bool Again = false;
-            Console.WriteLine("Play again?\nEnter 1 for yes\nEnter 2 for no");
-            string userAnswer = Console.ReadLine();
-            int yesOrNo = 0;
-            bool evalInput = Int32.TryParse(userAnswer, out yesOrNo);
-
-            if (yesOrNo == 1)
-            {
-                return !Again;
-            }
-            else if (yesOrNo == 2)
-            {
-                return Again;
-            }
-            else return Again;
-        }
-    }
+    }//EoP
 }
