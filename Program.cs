@@ -1,147 +1,143 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace _6_FlowControl
+namespace GuessingGameChallenge
 {
     public class Program
     {
-        public static string userName;
-        public static string password;
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Register();
-            Login();
-            int temp = GetValidTemperature();
-            GiveActivityAdvice(temp);
-            GetTemperatureTernary(temp);
-        }
-
-       
-        public static int GetValidTemperature()
-        {
-            int temp;
-            bool valid;
-
+            bool startOver;
+            List<int> guessNums = new List<int>();
             do
             {
-                Console.Write("Please Enter A Farhrenheit Temperature: ");
-                valid = int.TryParse(Console.ReadLine(), out temp);
+                int userTurns = 0;
+                string userGuesses = $"Your Guesses are: {guessNums} ";
+                Console.WriteLine("Welcome to my Guessing Game.");
+                int randomNum = GetRandomNumber();
+                Console.WriteLine("The computer has selected a guess. Now you have 10 tries to match that guess or you lose.");
 
-                if (valid)
+                do
                 {
-                    if (temp < -40 || temp > 135)
+                    Console.WriteLine("Please enter your guess.");
+                    int guess = GetUsersGuess();
+                    int round = CompareNums(randomNum, guess);
+                    guessNums.Add(guess);
+                    if (round == -1)
                     {
-                        Console.WriteLine("Invalid input must be between -40 and 135");
-                        valid = false;
+                        Console.WriteLine("Your guess is too high, try again.");
+                        userTurns++;
+                        Console.WriteLine(userGuesses);
                     }
-                }
-                else
+                    else if (round == 1)
+                    {
+                        Console.WriteLine("Your guess is too low, try again.");
+                        userTurns++;
+                        Console.WriteLine(userGuesses);
+                    }
+                    else if (round == 0)
+                    {
+                        Console.WriteLine("You Win! Great Job!");
+                        userTurns = -1;
+                        Console.WriteLine(userGuesses);
+                    }
+                } while (userTurns < 10 && userTurns != -1);
+
+
+                if (userTurns == 10)
                 {
-                    Console.WriteLine("Invalid input not a number!");
-                    valid = false;
+                    Console.WriteLine("Nice try. The computer got the best of you this time, though.");
                 }
+                else if (userTurns == -1)
+                {
+                    Console.WriteLine("Congrats on your Win!!!!");
+                }
+                foreach (int s in guessNums)
+                {
+                    Console.WriteLine(userGuesses);
+                }
+                startOver = PlayGameAgain();
+            } while (startOver == true);
 
-            } while (!valid);
-            return temp;
         }
 
         /// <summary>
-        /// This method has one int parameter
-        /// It prints outdoor activity advice and temperature opinion to the console 
-        /// based on 20 degree increments starting at -20 and ending at 135 
-        /// n < -20, Console.Write("hella cold");
-        /// -20 <= n < 0, Console.Write("pretty cold");
-        ///  0 <= n < 20, Console.Write("cold");
-        /// 20 <= n < 40, Console.Write("thawed out");
-        /// 40 <= n < 60, Console.Write("feels like Autumn");
-        /// 60 <= n < 80, Console.Write("perfect outdoor workout temperature");
-        /// 80 <= n < 90, Console.Write("niiice");
-        /// 90 <= n < 100, Console.Write("hella hot");
-        /// 100 <= n < 135, Console.Write("hottest");
-        /// </summary>
-        /// <param name="temp"></param>
-        public static void GiveActivityAdvice(int temp)
-        {
-            if (temp < -20)
-                Console.WriteLine("hella cold");
-            else if (-20 <= temp && temp < 0)
-                Console.WriteLine("pretty cold");
-            else if (0 <= temp && temp < 20)
-                Console.WriteLine("cold");
-            else if (20 <= temp && temp < 40)
-                Console.WriteLine("thawed out");
-            else if (40 <= temp && temp < 60)
-                Console.WriteLine("feels like Autumn");
-            else if (60 <= temp && temp < 80)
-                Console.WriteLine("perfect outdoor workout temperature");
-            else if (80 <= temp && temp < 90)
-                Console.WriteLine("niiice");
-            else if (90 <= temp && temp < 100)
-                Console.WriteLine("hella hot");
-            else if (100 <= temp && temp <= 135)
-                Console.WriteLine("hottest");
-        }
-
-        /// <summary>
-        /// This method gets a username and password from the user
-        /// and stores that data in the global variables of the 
-        /// names in the method.
-        /// </summary>
-        public static void Register()
-        {
-            Console.WriteLine("Enter username and password to register:");
-            Console.Write("Username: ");
-            userName = Console.ReadLine();
-            Console.Write("Password: ");
-            password = Console.ReadLine();
-            Console.WriteLine("User saved!\n");
-        }
-
-        /// <summary>
-        /// This method gets username and password from the user and
-        /// compares them with the username and password names provided in Register().
-        /// If the password and username match, the method returns true. 
-        /// If they do not match, the user is reprompted for the username and password
-        /// until the exact matches are inputted.
+        /// This method returns a randomly chosen number between 1 and 100, inclusive.
         /// </summary>
         /// <returns></returns>
-        public static bool Login()
+        public static int GetRandomNumber()
         {
-            bool loggedIn;
-            do
-            {
-                Console.WriteLine("Enter username and password to login:");
-                Console.Write("Username: ");
-                string tempUserName = Console.ReadLine();
-                Console.Write("Password: ");
-                string tempPassword = Console.ReadLine();
-                if (tempUserName == userName && tempPassword == password)
-                {
-                    Console.WriteLine($"\n{userName} logged in!");
-                    loggedIn = true;
-                }
-                else
-                {
-                    Console.WriteLine("\nInvalid user name or password!");
-                    loggedIn = false;
-                }
-            } while (!loggedIn);
+            int min = 1;
+            int max = 100;
+            int randNum = 0;
 
-            return loggedIn;
+            Random rnd = new Random();
+            return randNum = rnd.Next(min, max);
         }
 
         /// <summary>
-        /// This method has one int parameter.
-        /// It checks if the int is <=42, Console.WriteLine($"{temp} is too cold!");
-        /// between 43 and 78 inclusive, Console.WriteLine($"{temp} is an ok temperature");
-        /// or > 78, Console.WriteLine($"{temp} is too hot!");
-        /// For each temperature range, a different advice is given. 
+        /// This method gets input from the user, 
+        /// verifies that the input is valid and 
+        /// returns an int.
         /// </summary>
-        /// <param name="temp"></param>
-        public static void GetTemperatureTernary(int temp)
+        /// <returns></returns>
+        public static int GetUsersGuess()
         {
-            string advice;
-            advice = temp <= 42 ? $"{temp} is too cold!" : temp <= 78 ? $"{temp} is an ok temperature" : $"{temp} is too hot!";
-            Console.WriteLine(advice);
+            throw new NotImplementedException();
         }
-    }//EoP
-}//EoN
+
+        /// <summary>
+        /// This method will has two int parameters.
+        /// It will:
+        /// 1) compare the first number to the second number
+        /// 2) return -1 if the first number is less than the second number
+        /// 3) return 0 if the numbers are equal
+        /// 4) return 1 if the first number is greater than the second number
+        /// </summary>
+        /// <param name="randomNum"></param>
+        /// <param name="guess"></param>
+        /// <returns></returns>
+        public static int CompareNums(int randomNum, int guess)
+        {
+            int result;
+            if (randomNum < guess)
+            {
+                result = -1;
+            }
+            else if (randomNum == guess)
+            {
+                result = 0;
+            }
+            else
+            {
+                result = 1;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// This method offers the user the chance to play again. 
+        /// It returns true if they want to play again and false if they do not.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static bool PlayGameAgain()
+        {
+            bool Again = false;
+            Console.WriteLine("Play again?\nEnter 1 for yes\nEnter 2 for no");
+            string userAnswer = Console.ReadLine();
+            int yesOrNo = 0;
+            bool evalInput = Int32.TryParse(userAnswer, out yesOrNo);
+
+            if (yesOrNo == 1)
+            {
+                return !Again;
+            }
+            else if (yesOrNo == 2)
+            {
+                return Again;
+            }
+            else return Again;
+        }
+    }
+}
